@@ -1,8 +1,6 @@
 package main
 
 import (
-	"math/rand"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -17,9 +15,7 @@ var world [][]int32
 
 func player() {
 	if rl.IsKeyDown(rl.KeyW) {
-
 		position.Y -= float32(speed)
-
 	}
 	if rl.IsKeyDown(rl.KeyS) {
 		position.Y += float32(speed)
@@ -34,64 +30,28 @@ func player() {
 	rl.DrawRectangle(int32(position.X), int32(position.Y), int32(tileSize), int32(tileSize), rl.Black)
 }
 
-func initMap() {
-	world = make([][]int32, width)
-	for x := range world {
-		world[x] = make([]int32, height)
-	}
-}
-
-func generate_map() {
-
-	for x := 0; x < int(width); x++ {
-		for y := 0; y < int(height); y++ {
-			random := rand.Intn(101)
-
-			if random < 2 {
-				world[x][y] = 2
-			} else if random < 5 {
-				world[x][y] = 1
-			} else if random < 90 {
-				world[x][y] = 0
-			}
-		}
-
-	}
-}
-
-func draw_map() {
-	for x := 0; x < int(width); x++ {
-		for y := 0; y < int(height); y++ {
-			var color rl.Color
-			if world[x][y] == 0 {
-				color = rl.Green
-			}
-			if world[x][y] == 1 {
-				color = rl.Blue
-			}
-			if world[x][y] == 2 {
-				color = rl.Gray
-			}
-
-			rl.DrawRectangle(int32(x)*int32(tileSize), int32(y)*int32(tileSize), int32(tileSize), int32(tileSize), color)
-		}
-	}
-}
-
 func main() {
-	rl.InitWindow(800, 450, "raylib [core] example - basic window")
+	rl.InitWindow(WIDTH, HEIGHT, "Game")
 	defer rl.CloseWindow()
 	rl.SetTargetFPS(60)
 
+	// Ініціалізація карти
 	initMap()
+
+	// Генерація карти
 	generate_map()
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 
 		rl.ClearBackground(rl.RayWhite)
+		// Малюємо карту
 		draw_map()
+
+		// Малюємо гравця
 		player()
+
+		// FPS
 		rl.DrawFPS(10, 10)
 
 		rl.EndDrawing()
